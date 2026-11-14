@@ -155,8 +155,8 @@ do
   --  It is very similar to `vim.o` but offers an interface for conveniently interacting with tables.
   --   See `:help lua-options`
   --   and `:help lua-guide-options`
-  vim.o.list = true
-  vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
+  vim.o.list = false 
+  vim.opt.listchars = { trail = '·', nbsp = '␣' }
 
   -- Preview substitutions live, as you type!
   vim.o.inccommand = 'split'
@@ -171,6 +171,10 @@ do
   -- instead raise a dialog asking if you wish to save the current file(s)
   -- See `:help 'confirm'`
   vim.o.confirm = true
+
+  vim.o.shiftwidth = 3
+  vim.o.tabstop = 3
+  vim.o.softtabstop = 3
 end
 
 -- ============================================================
@@ -233,8 +237,13 @@ do
   vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
   vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
   vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
+
+  -- Split Window Vertially and Horizontally
+  vim.keymap.set("n", "<leader>v", "<cmd>vsplit<CR>" , {desc = 'Split window vertically.'})
+  vim.keymap.set("n", "<leader>h", "<cmd>split<CR>" , {desc = 'Split window horizontally.'})
+
   vim.keymap.set('n', '<leader>pv', vim.cmd.Ex, {desc = "Open file explorer."} )
-  vim.keymap.set('n', '<leader>e', '<Cmd>Neotree toggle<CR>', {desc = "Toggle neo-tree."} )
+  -- vim.keymap.set('n', '<C-e>', '<Cmd>Neotree toggle<CR>', {desc = "Toggle neo-tree."} )
 
   -- NOTE: Some terminals have colliding keymaps or are not able to send distinct keycodes
   -- vim.keymap.set("n", "<C-S-h>", "<C-w>H", { desc = "Move window to the left" })
@@ -1026,7 +1035,28 @@ do
   -- require 'kickstart.plugins.indent_line'
   -- require 'kickstart.plugins.lint'
   require 'kickstart.plugins.autopairs'
-  require 'kickstart.plugins.neo-tree'
+  -- require 'kickstart.plugins.neo-tree'
+
+  do
+
+    vim.pack.add{
+      gh "lukas-reineke/indent-blankline.nvim",
+    }
+
+    require('ibl').setup{
+      indent = {
+        char = "│",
+        tab_char = "│"
+      }
+    }
+
+    scope = {
+        enabled = true,
+        show_start = true,
+        show_end = true
+      }
+
+  end
 
   -- NOTE: You can add your own plugins, configuration, etc. in `lua/custom/plugins/*.lua`.
   --
