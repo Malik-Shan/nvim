@@ -239,11 +239,10 @@ do
   vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
   -- Split Window Vertially and Horizontally
-  vim.keymap.set("n", "<leader>v", "<cmd>vsplit<CR>" , {desc = 'Split window vertically.'})
-  vim.keymap.set("n", "<leader>h", "<cmd>split<CR>" , {desc = 'Split window horizontally.'})
+  vim.keymap.set("n", "<leader>k", "<cmd>vsplit<CR>" , {desc = 'Split window vertically.'})
+  vim.keymap.set("n", "<leader>l", "<cmd>split<CR>" , {desc = 'Split window horizontally.'})
 
   vim.keymap.set('n', '<leader>pv', vim.cmd.Ex, {desc = "Open file explorer."} )
-  -- vim.keymap.set('n', '<C-e>', '<Cmd>Neotree toggle<CR>', {desc = "Toggle neo-tree."} )
 
   -- NOTE: Some terminals have colliding keymaps or are not able to send distinct keycodes
   -- vim.keymap.set("n", "<C-S-h>", "<C-w>H", { desc = "Move window to the left" })
@@ -565,7 +564,40 @@ do
   local builtin = require 'telescope.builtin'
   vim.keymap.set('n', '<leader>sh', builtin.help_tags, { desc = '[S]earch [H]elp' })
   vim.keymap.set('n', '<leader>sk', builtin.keymaps, { desc = '[S]earch [K]eymaps' })
-  vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = '[S]earch [F]iles' })
+
+  local actions = require('telescope.actions')
+  local action_state = require('telescope.actions.state')
+
+  vim.keymap.set('n', '<leader>sf', function()
+    builtin.find_files({
+      attach_mappings = function(prompt_bufnr, map)
+        local function open_file()
+          local entry = action_state.get_selected_entry()
+
+          if not entry then return end
+
+          local path = entry.path or entry.filename
+
+          if not path then return end
+
+          path = vim.fn.fnamemodify(path, ':p')
+
+          actions.close(prompt_bufnr)
+
+          local buf = vim.fn.bufadd(path)
+          vim.fn.bufload(buf)
+          vim.api.nvim_set_current_buf(buf)
+        end
+
+        map('i', '<CR>', open_file)
+        map('n', '<CR>', open_file)
+
+        return true
+      end,
+    })
+  end, { desc = '[S]earch [F]iles' })
+
+  -- vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = '[S]earch [F]iles' })
   vim.keymap.set('n', '<leader>ss', builtin.builtin, { desc = '[S]earch [S]elect Telescope' })
   vim.keymap.set({ 'n', 'v' }, '<leader>sw', builtin.grep_string, { desc = '[S]earch current [W]ord' })
   vim.keymap.set('n', '<leader>sg', builtin.live_grep, { desc = '[S]earch by [G]rep' })
@@ -1035,28 +1067,8 @@ do
   -- require 'kickstart.plugins.indent_line'
   -- require 'kickstart.plugins.lint'
   require 'kickstart.plugins.autopairs'
-  -- require 'kickstart.plugins.neo-tree'
-
-  do
-
-    vim.pack.add{
-      gh "lukas-reineke/indent-blankline.nvim",
-    }
-
-    require('ibl').setup{
-      indent = {
-        char = "│",
-        tab_char = "│"
-      }
-    }
-
-    scope = {
-        enabled = true,
-        show_start = true,
-        show_end = true
-      }
-
-  end
+  require 'kickstart.plugins.neo-tree'
+  require 'kickstart.plugins.indent-blankline'
 
   -- NOTE: You can add your own plugins, configuration, etc. in `lua/custom/plugins/*.lua`.
   --
