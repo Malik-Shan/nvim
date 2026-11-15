@@ -242,6 +242,9 @@ do
   vim.keymap.set("n", "<leader>k", "<cmd>vsplit<CR>" , {desc = 'Split window vertically.'})
   vim.keymap.set("n", "<leader>l", "<cmd>split<CR>" , {desc = 'Split window horizontally.'})
 
+  vim.keymap.set('v', 'J', ":m '>+1<CR>gv=gv", {desc = "Move selection down"})
+  vim.keymap.set('v', 'K', ":m '<-2<CR>gv=gv", {desc = "Move selection down"})
+
   vim.keymap.set('n', '<leader>pv', vim.cmd.Ex, {desc = "Open file explorer."} )
 
   -- NOTE: Some terminals have colliding keymaps or are not able to send distinct keycodes
