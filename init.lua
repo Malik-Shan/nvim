@@ -1073,6 +1073,7 @@ do
   require 'kickstart.plugins.autopairs'
   require 'kickstart.plugins.neo-tree'
   require 'kickstart.plugins.indent-blankline'
+  require 'kickstart.plugins.ts-autotag'
 
   -- NOTE: You can add your own plugins, configuration, etc. in `lua/custom/plugins/*.lua`.
   --
